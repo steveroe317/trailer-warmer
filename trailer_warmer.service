@@ -1,0 +1,14 @@
+[Unit]
+Description=Trys to keep trailer above freezing
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/steveroe/trailer-warmer
+ExecStart=/home/steveroe/trailer-warmer/env/bin/python3 thermostat.py
+User=steveroe
+Group=steveroe
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
