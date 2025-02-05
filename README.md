@@ -43,15 +43,17 @@ sudo chown steveroe:steveroe /var/log/trailer-warmer/
 
 Change User and Group in trailer_warmer.service from steveroe to local values
 
-sudo cp trailer_warmer.service /etc/systemd/system
+sudo cp trailer-warmer.service /etc/systemd/system
 
 sudo systemctl daemon-reload
 
-sudo systemctl start trailer_warmer.service
+sudo systemctl start trailer-warmer.service
+
+sudo systemctl enable trailer-warmer.service
 
 # Restarting
 
-sudo systemctl restart trailer_warmer.service
+sudo systemctl restart trailer-warmer.service
 
 sudo systemctl reboot
 
@@ -70,3 +72,5 @@ journalctl -u trailer_warmer.service -f
 https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all#i2c-on-pi
 
 https://pimylifeup.com/raspberry-pi-humidity-sensor-dht22/
+
+https://medium.com/@benmorel/creating-a-linux-service-with-systemd-611b5c8b91d6
