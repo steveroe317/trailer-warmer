@@ -14,7 +14,9 @@ import adafruit_dht # type: ignore
 import board # type: ignore
 import datetime
 import digitalio # type: ignore
+import os
 import time
+import shutil
 import sys
 
 # Heater control limits. The heater turns on when the temperature drops below
@@ -26,6 +28,20 @@ heater_off_threshold_f = 38
 sample_period_s = 60.0
 
 log_name = '/var/log/trailer-warmer/thermostat.log'
+log_size_limit = 2_000_000_000
+log_rotate_count = 4
+
+
+def rotate_logs(log_name: str) -> None:
+	"""Rotates log files, keeps log_rotate_count-1 old logs."""
+
+	log_names = [f'{log_name}.{index}' for index in range(log_rotate_count)]
+	log_names[0] = log_name
+
+	for index in reversed(range(log_rotate_count - 1)):
+		if os.path.isfile(log_names[index]):
+			shutil.move(log_names[index], log_names[index+1])
+
 
 # Set up interface for temperature sensor.
 dht_device = adafruit_dht.DHT22(board.D4)
@@ -61,6 +77,11 @@ while True:
 			if heater_control.value != False:
 				heater_control.value = False
 
+		# Rotate log files if needed.
+		if os.path.isfile(log_name):
+			if os.path.getsize(log_name) > log_size_limit:
+				rotate_logs(log_name)
+
 		# Log the current sensor readings and heater state.
 		now = datetime.datetime.now()
 		timestamp = now.strftime('%Y/%m/%d %H:%M:%S')
@@ -73,7 +94,7 @@ while True:
 	except RuntimeError as err:
 		print(err.args[0])
 
-	# Wait 10 seconds before checking the temperature again.
+	# Wait N seconds before checking the temperature again.
 	time.sleep(sample_period_s)
 
 # If the loop terminates, exit with an error
