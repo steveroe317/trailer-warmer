@@ -3,7 +3,7 @@ a temperature sensor, and an IoT Relay.
 
 # Requirements
 
-## Hardware
+**Hardware**
 
 Raspberry Pi
 
@@ -18,30 +18,48 @@ Chanzon 120pcs 10cm 20cm 30cm Long Header Jumper Wire
 Dupont Cable Line Connector Assorted Kit Set
 https://www.amazon.com/dp/B09FPGT7JT?ref=ppx_yo2ov_dt_b_fed_asin_title&th=1
 
-## Software
+**Software**
 
-python3
-
-pip for python3 - if needed, run
+* WiFi connection
+* git
+* python3
+* pip for python3 - if needed, run
 `sudo apt install python3-dev python3-pip`
 
-# Setup
+#Hardware Setup
 
-md trailer-warmer
+DHT22 AM2302 temperature/humidity sensor
+* Connect the Raspberry Pi pin 20 (GND) to the DHT22 AM2302 "-" terminal
+* Connect the Raspberry Pi pin 18 (GPIO24) to the DHT22 AM2302 "out" terminal
+* Connect the Raspberry Pi pin 17 (3.3V) to the DHT22 AM2302 "+" terminal
 
+
+IoT Relay
+* Connect the Raspberry Pi pin 30 (GND) to the IoT Relay "-" control terminal
+* Connect the Raspberry Pi pin 29 (GPIO5) to the Iot Relay "+" control terminal
+
+# Software Installation
+
+Clone the trailer-warmer repository and set up a virtual environment.
+
+```
+git clone https://github.com/steveroe317/trailer-warmer.git
 cd trailer-warmer
-
-python3 -m venv env
-
+python -m venv env
 source env/bin/activate
+python -m pip install adafruit-circuitpython-dht
+```
 
-python3 -m pip install adafruit-circuitpython-dht
+# Log Directory Setup
 
-sudo mkdir /var/log/trailer-warmer
+* sudo mkdir /var/log/trailer-warmer
+* sudo chown steveroe:steveroe /var/log/trailer-warmer/
 
-sudo chown steveroe:steveroe /var/log/trailer-warmer/
+# Running the Trailer Warmer Software
 
-Change User and Group in trailer_warmer.service from steveroe to local values
+# Setting up a Linux service to run the software
+
+Change User and Group in trailer_warmer.service from steveroe to your username
 
 sudo cp trailer-warmer.service /etc/systemd/system
 
@@ -51,7 +69,8 @@ sudo systemctl start trailer-warmer.service
 
 sudo systemctl enable trailer-warmer.service
 
-# Restarting
+
+# Restarting the service
 
 sudo systemctl restart trailer-warmer.service
 

@@ -44,10 +44,10 @@ def rotate_logs(log_name: str) -> None:
 
 
 # Set up interface for temperature sensor.
-dht_device = adafruit_dht.DHT22(board.D4)
+dht_device = adafruit_dht.DHT22(board.D24)
 
 # Set up control for heater on Iot Relay.
-heater_control = digitalio.DigitalInOut(board.D25)
+heater_control = digitalio.DigitalInOut(board.D5)
 heater_control.direction = digitalio.Direction.OUTPUT
 heater_control.value = False
 
