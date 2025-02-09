@@ -1,5 +1,5 @@
 [Unit]
-Description=Trys to keep trailer above freezing
+Description=Tries to keep trailer above freezing
 After=network.target
 
 [Service]
