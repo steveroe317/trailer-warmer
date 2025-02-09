@@ -28,7 +28,7 @@ heater_off_threshold_f = 38
 sample_period_s = 60.0
 
 log_name = "/var/log/trailer-warmer/thermostat.log"
-log_size_limit = 2_000_000_000
+log_size_limit = 1_000_000
 log_rotate_count = 4
 
 
