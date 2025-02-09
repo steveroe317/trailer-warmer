@@ -1,5 +1,14 @@
 This project implements a simple thermostat using a Raspberry Pi,
-a temperature sensor, and an IoT Relay.
+a temperature sensor, and an IoT Relay. It is meant to keep a small
+T@B trailer from freezing during the winter.
+
+The project has hard-coded temperature limits.  When the measured temperature
+drops to 35 degrees Fahrenheit or below, the IoT Relay powers on heating
+elements (in this case incandescent lights). When the temperature rises to
+38 degrees or above, the IoT Relay powers off the heating elements.
+
+It's prudent to winterize any trailer too, rather than relying on an
+active system 😉
 
 # Requirements
 
@@ -45,7 +54,7 @@ with the login that will run the trailer warmer app.
 sudo mkdir /var/log/trailer-warmer
 sudo chown username:username /var/log/trailer-warmer/
 ```
-# Running the Software
+# Running the App
 
 If needed, activate the Python virtual environment.
 
@@ -94,39 +103,85 @@ the heater control signal will turn off
 2025/02/04 08:32:27,38,65,HEATER_OFF
 ```
 
-# Setting up a Linux service to run the software
+# Setting Up the App as a Linux Service
 
-Change User and Group in trailer_warmer.service from steveroe to your username
+Modify the repo's trailer-warmer.service file for your enviroment.
 
+* Change the WorkingDirectory entry to the trailer-warmer repo root
+* Change the ExecStart entry to env/bin/python within the repo root
+* Change User entry from steveroe to the login that will run the app
+* Change Group entry from steveroe to the login that will run the app
+
+Copy the modified trailer-warmer.service file to systemctl's service
+directory
+
+```
 sudo cp trailer-warmer.service /etc/systemd/system
+```
 
-sudo systemctl daemon-reload
+Make sure the app is not already running. If is, there will be resource
+conflicts with the GPIO libraries.
 
+Start the service with this command
+
+```
 sudo systemctl start trailer-warmer.service
+```
 
-sudo systemctl enable trailer-warmer.service
+Check that the service by watching for new entries in
+/var/log/trailer-warmer/thermostat.log
 
+```
+tail -f /var/log/trailer-warmer/thermostat.log
+```
 
-# Restarting the service
+and/or by running
 
-sudo systemctl restart trailer-warmer.service
-
-sudo systemctl reboot
-
-# Monitoring
-
-sudo systemctl is-enabled trailer_warmer.service
-
-tail -f /var/log/trailer_warmer/thermostat.log
-
+```
 sudo systemctl status trailer_warmer.service
+```
 
-journalctl -u trailer_warmer.service -f
+systemd logs for the service can be viewd by running
+
+```
+journalctl -u trailer-warmer.service -f
+```
+
+Enable the service to start at boot by running
+
+```
+sudo systemctl enable trailer-warmer.service
+```
+
+Check that the service is enabled at boot by running
+
+```
+sudo systemctl is-enabled trailer-warmer.service
+```
+
+Service startup at boot can be tested by rebooting
+
+```
+sudo systemctl reboot
+```
+
+The service can be stopped, started, restarted, enabled, or disabled with these
+commands
+
+```
+sudo systemctl stop trailer-warmer.service
+sudo systemctl start trailer-warmer.service
+sudo systemctl restart trailer-warmer.service
+sudo systemctl enable trailer-warmer.service
+sudo systemctl disable trailer-warmer.service
+```
 
 # References
 
-https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial/all#i2c-on-pi
-
 https://pimylifeup.com/raspberry-pi-humidity-sensor-dht22/
+
+https://www.digital-loggers.com/iot2.html
+
+https://www.redhat.com/en/blog/linux-systemctl-manage-services
 
 https://medium.com/@benmorel/creating-a-linux-service-with-systemd-611b5c8b91d6
