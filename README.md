@@ -221,6 +221,11 @@ sudo systemctl disable trailer-warmer.service
 
 # References
 
+[Raspberry Pi](https://www.raspberrypi.com) web page.
+Hardware, software, and documentation for Raspberry Pi single
+board computers and microcontrollers.
+
+
 PiMyLife 
 [DHT22 humidity sensor how-to](https://pimylifeup.com/raspberry-pi-humidity-sensor-dht22/)
 article.
@@ -228,12 +233,12 @@ The external resistor in the article is not needed for the HiLetgo
 DHT22 AM2302 sensor.
 
 Digital Loggers
-[IoT Relay page](https://www.digital-loggers.com/iot2.html)
+[IoT Relay page](https://www.digital-loggers.com/iot2.html).
 
 RedHat
 [systemctl how-to](https://www.redhat.com/en/blog/linux-systemctl-manage-services)
-article
+article.
 
 Medium
 [Linux service how-to](https://medium.com/@benmorel/creating-a-linux-service-with-systemd-611b5c8b91d6)
-article
+article.
